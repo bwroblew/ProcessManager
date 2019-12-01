@@ -1,0 +1,113 @@
+﻿<Window x:Class="ProcessManager.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ProcessManager"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="600" Width="750">
+
+    <Window.DataContext>
+        <local:ViewModel />
+    </Window.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="4*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Filter/Sort Box -->
+        <Grid Grid.Column="0" Grid.Row="0">
+            <Border BorderBrush="Black" Margin="1" BorderThickness="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            </Border>
+
+            <Label x:Name="filterLabel" Content="Custom filter: " Margin="10,20,150,60"/>
+            <TextBox x:Name="filterTextBox" Margin="97,10,66,60"/>
+            <Button x:Name="filterButton" Content="Filter" Margin="217,10,10,60" Click="FilterButton_Click"/>
+
+            <Label x:Name="sortLabel" Content="Custom sort: " Margin="10,70,150,10"/>
+            <ComboBox x:Name="sortComboBox" Margin="97,60,66,10"/>
+            <Button x:Name="sortButton" Content="Sort" Margin="217,60,10,10" Click="SortButton_Click"/>
+        </Grid>
+
+        <!-- Refresh/New process box -->
+        <Grid Grid.Column="1" Grid.Row="0">
+            <Border BorderBrush="Black" Margin="1" BorderThickness="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <Button x:Name="refreshButton" Content="Refresh" Margin="10,10,10,74" Click="RefreshButton_Click" Height="25"/>
+            <TextBox x:Name="newProcessTextBox" Text="Process name..." Margin="10,45,76,46"/>
+            <TextBox x:Name="newProcessTimeTextBox" Text="timeout [s]" Margin="115,45,10,46"/>
+            <Button x:Name="newProcessButton" Content="New process" Margin="10,73,10,16" Click="NewProcessButton_Click" Height="25"/>
+        </Grid>
+
+        <!-- Details box -->
+        <Grid Grid.Column="3" Grid.Row="0" Grid.RowSpan="2" >
+            <Border BorderBrush="Black" Margin="1" BorderThickness="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <Label x:Name="detailsLabel" Content="Details " Margin="10,10,10,515"/>
+            <local:LabelKeyValueBox x:Name="detailsPid_LKVB" Height="30" VerticalAlignment="Top" 
+                                    Key="Process id:" Value="{Binding SelectedProcess.Id, Mode=OneWay}" Margin="10,50,10,10"/>
+            <local:LabelKeyValueBox x:Name="detailsPname_LKVB" Height="30" VerticalAlignment="Top" 
+                                    Key="Process name:" Value="{Binding SelectedProcess.ProcessName, Mode=OneWay}" Margin="10,80,10,10"/>
+            <local:LabelKeyValueBox x:Name="detailsPthreads_LKVB" Height="30" VerticalAlignment="Top" 
+                                    Key="Threads used:" Value="{Binding SelectedProcess.Threads.Count, Mode=OneWay}" Margin="10,110,10,10"/>
+            <local:LabelKeyValueBox x:Name="detailsPpriority_LKVB" Height="30" VerticalAlignment="Top" 
+                                    Key="Priority" Value="{Binding SelectedProcess.PriorityClass, Mode=OneWay}" Margin="10,140,10,10"/>
+            <local:LabelKeyValueBox x:Name="detailsPstart_LKVB" Height="30" VerticalAlignment="Top" 
+                                    Key="Start timeout:" Value="{Binding SelectedProcess.StartTime, Mode=OneWay}" Margin="10,170,10,10"/>
+            <local:LabelKeyValueBox x:Name="detailsPpaged_LKVB" Height="30" VerticalAlignment="Top" 
+                                    Key="Paged memory size:" Value="{Binding SelectedProcess.PagedMemorySize64, Mode=OneWay}" Margin="10,200,10,10"/>
+            <local:LabelKeyValueBox x:Name="detailsPnonpaged_LKVB" Height="30" VerticalAlignment="Top" 
+                                    Key="NonPaged memory size:" Value="{Binding SelectedProcess.NonpagedSystemMemorySize64, Mode=OneWay}" Margin="10,230,10,10"/>
+            <local:LabelKeyValueBox x:Name="detailsPprivate_LKVB" Height="30" VerticalAlignment="Top" 
+                                    Key="Private memory size:" Value="{Binding SelectedProcess.PrivateMemorySize64, Mode=OneWay}" Margin="10,260,10,10"/>
+            <local:LabelKeyValueBox x:Name="detailsPvirtual_LKVB" Height="30" VerticalAlignment="Top" 
+                                    Key="Virtual memory size:" Value="{Binding SelectedProcess.VirtualMemorySize64, Mode=OneWay}" Margin="10,290,10,10"/>
+            <local:LabelKeyValueBox x:Name="detailsPprocessorTime_LKVB" Height="30" VerticalAlignment="Top" 
+                                    Key="Total processor timeout:" Value="{Binding SelectedProcess.TotalProcessorTime, Mode=OneWay}" Margin="10,320,10,10"/>
+            <local:LabelKeyValueBox x:Name="detailsPuserTime_LKVB" Height="30" VerticalAlignment="Top" 
+                                    Key="User processor timeout:" Value="{Binding SelectedProcess.UserProcessorTime, Mode=OneWay}" Margin="10,350,10,10"/>
+            <local:LabelKeyValueBox x:Name="detailsPresponding_LKVB" Height="30" VerticalAlignment="Top" 
+                                    Key="Responding:" Value="{Binding SelectedProcess.Responding, Mode=OneWay}" Margin="10,380,10,10"/>
+
+            <Button x:Name="killButton" Content="Kill process" Margin="152,0,10,97" VerticalAlignment="Bottom" Height="20" Click="KillButton_Click"/>
+            <Label x:Name="priorityLabel" Content="New priority: " Margin="10,0,120,60" VerticalAlignment="Bottom" Height="31"/>
+            <ComboBox x:Name="priorityComboBox" Margin="10,0,98,35" VerticalAlignment="Bottom" Height="20"/>
+            <Button x:Name="piorityButton" Content="Set" Margin="185,0,10,35" VerticalAlignment="Bottom" Click="PiorityButton_Click"/>
+
+            <ProgressBar x:Name="detailsProgressBar" Height="20" Margin="5,5,5,5" VerticalAlignment="Bottom" Value="{Binding ProgressStatus, Mode=OneWay}" />
+        </Grid>
+
+        <Grid Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
+            <Border BorderBrush="Black"  Margin="1" BorderThickness="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <ListBox ItemsSource="{Binding ProcessesList}"
+                     HorizontalContentAlignment="Stretch"
+                     SelectionChanged="ProcessesList_SelectionChanged" Margin="5,5,5,5">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="0">
+                                <TextBlock Text="{Binding Process.ProcessName}"/>
+                            </Grid>
+                            <Grid Grid.Column="1">
+                                <TextBlock Text="{Binding Process.Id}"/>
+                            </Grid>
+                            <Grid Grid.Column="2">
+                                <TextBlock Text="{Binding Process.Threads.Count}"/>
+                            </Grid>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+
+    </Grid>
+</Window>

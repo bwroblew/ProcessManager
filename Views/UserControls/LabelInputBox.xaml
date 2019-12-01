@@ -1,0 +1,30 @@
+﻿<UserControl x:Class="GameOfLife.LabelInputBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="30" d:DesignWidth="300" MinHeight="30" MaxHeight="30">
+    <Grid x:Name="Root">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" SharedSizeGroup="Labels"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <Label Grid.Column="0" MinWidth="50" Content="{Binding Label}"/>
+        <TextBox Grid.Column="1" MinWidth="150" Text="{Binding Text}">
+            <TextBox.Triggers>
+                <EventTrigger RoutedEvent="TextBox.MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation To="Red" 
+                                    Storyboard.TargetProperty="(TextBox.Background).(SolidColorBrush.Color)" 
+                                    FillBehavior="Stop" 
+                                    Duration="0:0:2"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </TextBox.Triggers>
+        </TextBox>
+    </Grid>
+</UserControl>
